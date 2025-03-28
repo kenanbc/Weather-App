@@ -37,17 +37,17 @@ const Weather = () => {
       const getBackgroundImage = () => {
       switch(weatherType){
         case 'Rain':
-          return "url(/src/assets/rain.jpg)";
+          return "url(/Weather-App/rain.jpg)";
         case 'Clear':
-          return "url(/src/assets/clear.jpg)";
+          return "url(/Weather-App/clear.jpg)";
         case 'Clouds':
-          return "url(/src/assets/cloudy.jpg)";
+          return "url(/Weather-App/cloudy.jpg)";
         case 'Mist':
-          return "url(/src/assets/mist.jpg)";
+          return "url(/Weather-App/mist.jpg)";
         case 'Fog':
-          return "url(/src/assets/mist.jpg)";
+          return "url(/Weather-App/mist.jpg)";
         case 'Snow':
-          return "url(/src/assets/snow.jpg)";
+          return "url(/Weather-App/snow.jpg)";
         default:
           return "url()";
       }
