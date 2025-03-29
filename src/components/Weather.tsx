@@ -28,8 +28,8 @@ const Weather = () => {
     };
 
     const updateCurrentTime = (today: Date) => {
-      setCurrentTime(today.getHours().toString() + ':' + today.getMinutes().toString() 
-      + ' ' +days[today.getDay()].toString() + ' - ' + months[today.getMonth()].toString() 
+      setCurrentTime(today.getHours().toString().padStart(2, "0") + ':' + today.getMinutes().toString().padStart(2, "0") 
+      + ' ' + days[today.getDay()].toString() + ' - ' + months[today.getMonth()].toString() 
       + ' ' + today.getDate().toString() + ' , ' + today.getFullYear().toString());
     }
 

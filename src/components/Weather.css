@@ -47,7 +47,7 @@ h1, h2, h3, h4, h5{
 }
 
 #current-time{
-    margin-top: 1rem;
+    margin: 1rem 0;
 }
 
 h5 > span {
@@ -66,19 +66,29 @@ h5 > span {
     width: 90%;
 }
 
-img {
-    width: 8rem;
-    height: 8rem;
-    filter: none;
-}
-
-
-@media (max-width: 450px) and (max-height: 1000px) {
+@media (max-width: 450px){
     .main-inner{
         width: 25rem;
     }
-
     #search-input-field{
         width: 14rem;
+    }
+}
+
+@media (max-width: 400px){
+    .main-inner{
+        width: 22rem;
+    }
+    #search-input-field{
+        width: 12rem;
+    }
+}
+
+@media (max-width: 360px){
+    .main-inner{
+        width: 20rem;
+    }
+    #search-input-field{
+        width: 12rem;
     }
 }
