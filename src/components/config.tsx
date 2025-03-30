@@ -96,3 +96,17 @@ export const months = [
   "December",
 ];
 export const DEFAULT_CITY = 'Tuzla';
+
+export const convertMStoKPH = (data: number) => {
+  return Math.floor(data * 3.6)
+}
+
+export const firstLetterUpperCase = (data: string) => {
+  return data.slice(0,1).toUpperCase() + data.slice(1).toLowerCase();
+}
+
+export const timeFormater = (today: Date) => {
+  return today.getHours().toString().padStart(2, "0") + ':' + today.getMinutes().toString().padStart(2, "0") 
+      + ' ' + days[today.getDay()].toString() + ' - ' + months[today.getMonth()].toString() 
+      + ' ' + today.getDate().toString() + ', ' + today.getFullYear().toString();
+}

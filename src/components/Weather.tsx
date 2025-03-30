@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Weather.css";
-import { icons } from "./config";
+import { convertMStoKPH, firstLetterUpperCase, icons, timeFormater } from "./config";
 import { days, months } from "./config";
 import { DEFAULT_CITY } from "./config";
 
@@ -16,8 +16,7 @@ const Weather = () => {
     const [cityName, setCityName] = useState(DEFAULT_CITY);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      let newCity = (event.target.value);
-      newCity = newCity.slice(0,1).toUpperCase() + newCity.slice(1).toLowerCase();
+      let newCity = firstLetterUpperCase(event.target.value);
       setCity(newCity);
     }
 
@@ -28,9 +27,7 @@ const Weather = () => {
     };
 
     const updateCurrentTime = (today: Date) => {
-      setCurrentTime(today.getHours().toString().padStart(2, "0") + ':' + today.getMinutes().toString().padStart(2, "0") 
-      + ' ' + days[today.getDay()].toString() + ' - ' + months[today.getMonth()].toString() 
-      + ' ' + today.getDate().toString() + ' , ' + today.getFullYear().toString());
+      setCurrentTime(timeFormater(today));
     }
 
     useEffect(() => {
@@ -63,14 +60,13 @@ const Weather = () => {
         try {
           const response = await fetch(URL);
           if(!response.ok) throw new Error(`Error! Status: ${response.status}`)
-
           const data = await response.json();
+
           setWeatherType(data.weather[0].main);
           setWeatherDescription(data.weather[0].description);
-          let temp = Math.floor(Number(data.main.temp));
-          setTemperature(temp + '°')
+          setTemperature(Math.floor(Number(data.main.temp)) + '°')
           setHumidity(data.main.humidity);
-          let windSpeed = Math.floor(Number(data.wind.speed) * 3.6);
+          let windSpeed = convertMStoKPH(Number(data.wind.speed));
           setWind(windSpeed);
           setClouds(data.clouds.all);
           
