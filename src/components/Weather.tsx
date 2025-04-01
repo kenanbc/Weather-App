@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
 import "./Weather.css";
-import { convertMStoKPH, firstLetterUpperCase, icons, timeFormater } from "./config";
-import { days, months } from "./config";
+import { firstLetterUpperCase, getBackgroundImage, timeFormater } from "./config";
 import { DEFAULT_CITY } from "./config";
 
 const Weather = () => {
-    const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
+    const [currentTime, setCurrentTime] = useState('');
     const [weatherType, setWeatherType] = useState('');
-    const [weatherDescription, setWeatherDescription] = useState();
     const [temperature, setTemperature] = useState('');
     const [humidity, setHumidity] = useState();
     const [wind, setWind] = useState(0);
     const [clouds, setClouds] = useState(0);
     const [city, setCity] = useState('');
     const [cityName, setCityName] = useState(DEFAULT_CITY);
-
+    const [icon, setIcon] = useState();
+    
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       let newCity = firstLetterUpperCase(event.target.value);
       setCity(newCity);
@@ -26,73 +25,32 @@ const Weather = () => {
       setCity("")
     };
 
-    const updateCurrentTime = (today: Date) => {
-      setCurrentTime(timeFormater(today));
-    }
-
-    useEffect(() => {
-      const getBackgroundImage = () => {
-      switch(weatherType){
-        case 'Rain':
-          return "url(/Weather-App/rain.jpg)";
-        case 'Clear':
-          return "url(/Weather-App/clear.jpg)";
-        case 'Clouds':
-          return "url(/Weather-App/cloudy.jpg)";
-        case 'Mist':
-          return "url(/Weather-App/mist.jpg)";
-        case 'Fog':
-          return "url(/Weather-App/mist.jpg)";
-        case 'Snow':
-          return "url(/Weather-App/snow.jpg)";
-        default:
-          return "url()";
-      }
-    }
-    document.body.style.backgroundImage = getBackgroundImage();
-
-    }, [weatherType]);
-
     useEffect(() =>{
-      let URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=200ecfbe9fd891d4a45f60a8062f581b&units=metric`;
+      let URL = `http://api.weatherapi.com/v1/current.json?key=c09063b4308e43149ec193447253103&q=${cityName}`;
       const fetchWeather = async () => {
-        const today = new Date();
         try {
           const response = await fetch(URL);
           if(!response.ok) throw new Error(`Error! Status: ${response.status}`)
+          
           const data = await response.json();
-
-          setWeatherType(data.weather[0].main);
-          setWeatherDescription(data.weather[0].description);
-          setTemperature(Math.floor(Number(data.main.temp)) + '°')
-          setHumidity(data.main.humidity);
-          let windSpeed = convertMStoKPH(Number(data.wind.speed));
-          setWind(windSpeed);
-          setClouds(data.clouds.all);
+          
+          setCurrentTime(timeFormater(new Date(data.location.localtime)))          
+          setTemperature(Math.floor(Number(data.current.temp_c)) + '°')
+          setHumidity(data.current.humidity);
+          setWind(data.current.wind_kph);
+          setClouds(data.current.cloud);
+          setWeatherType(data.current.condition.text)
+          setIcon(data.current.condition.icon)
+          document.body.style.backgroundImage = getBackgroundImage(data.current.condition.code, data.current.is_day);
           
         } catch (error) {
           setCityName(DEFAULT_CITY);
           alert("No city found!")
         }
-        updateCurrentTime(today);   
+ 
     }
     fetchWeather();
   }, [cityName]); 
-
-  const setIcon = () => {
-    switch(weatherType){
-      case 'Rain':
-        return icons[0];
-      case 'Clear':
-        return icons[1];
-      case 'Clouds':
-        return icons[2];
-      case 'Snow':
-        return icons[5];
-      case 'Fog':
-        return icons[6];
-    }
-  }
 
   return (
     <div className="main-inner">
@@ -109,13 +67,12 @@ const Weather = () => {
       <span id="current-time">{currentTime}</span>
       <h1>{cityName}</h1>
       <h3>{weatherType}</h3>
-      <h5>{weatherDescription}</h5>
-      {setIcon()}
+      <img src={icon} alt="" />
       <h2 id="temperature">{temperature}</h2>
       <div id="weather-information">
-        <h5>Cloudy <br/> <span> {clouds}% </span></h5>
-        <h5>Humidity <br/><span>{humidity}% </span></h5>
-        <h5>Wind <br/><span>{wind}km/h </span></h5>
+        <div id="inner-information"><h4>Cloudy</h4><span> {clouds}% </span></div>
+        <div id="inner-information"><h4>Humidity</h4><span>{humidity}% </span></div>
+        <div id="inner-information"><h4>Wind</h4><span>{wind}km/h </span></div>
       </div>
     </div>
   );
