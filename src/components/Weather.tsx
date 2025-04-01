@@ -26,7 +26,7 @@ const Weather = () => {
     };
 
     useEffect(() =>{
-      let URL = `http://api.weatherapi.com/v1/current.json?key=c09063b4308e43149ec193447253103&q=${cityName}`;
+      let URL = `https://api.weatherapi.com/v1/current.json?key=c09063b4308e43149ec193447253103&q=${cityName}`;
       const fetchWeather = async () => {
         try {
           const response = await fetch(URL);
