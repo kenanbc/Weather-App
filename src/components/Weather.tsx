@@ -11,7 +11,7 @@ const Weather = () => {
     const [wind, setWind] = useState(0);
     const [clouds, setClouds] = useState(0);
     const [city, setCity] = useState('');
-    const [cityName, setCityName] = useState(DEFAULT_CITY);
+    const [cityName, setCityName] = useState(sessionStorage.getItem("city") ? sessionStorage.getItem("city") : DEFAULT_CITY);
     const [icon, setIcon] = useState();
     
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,9 +20,10 @@ const Weather = () => {
     }
 
     const handleSearch = () => {
-      if(city.length !== 0) setCityName(city);
-      else setCityName(DEFAULT_CITY);
-      setCity("")
+      const storedCity = sessionStorage.getItem("city");
+      const selectedCity = city.length !== 0 ? city : (storedCity ? storedCity : DEFAULT_CITY);
+      setCityName(selectedCity);
+      setCity("");
     };
 
     useEffect(() =>{
@@ -34,6 +35,7 @@ const Weather = () => {
           
           const data = await response.json();
           
+          sessionStorage.setItem("city", data.location.name);
           setCurrentTime(timeFormater(new Date(data.location.localtime)))          
           setTemperature(Math.floor(Number(data.current.temp_c)) + '°')
           setHumidity(data.current.humidity);
@@ -44,7 +46,7 @@ const Weather = () => {
           document.body.style.backgroundImage = getBackgroundImage(data.current.condition.code, data.current.is_day);
           
         } catch (error) {
-          setCityName(DEFAULT_CITY);
+          setCityName(sessionStorage.getItem("city"));
           alert("No city found!")
         }
  
