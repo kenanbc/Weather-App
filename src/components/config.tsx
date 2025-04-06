@@ -1,11 +1,11 @@
 export const days = [
+  "Sunday",
   "Monday",
   "Thuesday",
   "Wedenesday",
   "Thursday",
   "Friday",
-  "Saturday",
-  "Sunday",
+  "Saturday"
 ];
 export const months = [
   "January",
@@ -27,20 +27,17 @@ export const firstLetterUpperCase = (data: string) => {
   return data.slice(0, 1).toUpperCase() + data.slice(1).toLowerCase();
 };
 
-export const timeFormater = (today: Date) => {
-  return (
-    today.getHours().toString().padStart(2, "0") +
-    ":" +
-    today.getMinutes().toString().padStart(2, "0") +
-    " " +
-    days[today.getDay() - 1].toString() +
-    " - " +
-    months[today.getMonth()].toString() +
-    " " +
-    today.getDate().toString() +
-    ", " +
-    today.getFullYear().toString()
-  );
+export const timeFormater = (today: Date): string => {
+  if (!(today instanceof Date) || isNaN(today.getTime())) return "Invalid time";
+
+  const hours = today.getHours().toString().padStart(2, "0");
+  const minutes = today.getMinutes().toString().padStart(2, "0");
+  const day = days[today.getDay()];
+  const month = months[today.getMonth()];
+  const date = today.getDate();
+  const year = today.getFullYear();
+
+  return `${hours}:${minutes} ${day} - ${month} ${date}, ${year}`;
 };
 
 export const getBackgroundImage = (code: number, isDayTime: number) => {
